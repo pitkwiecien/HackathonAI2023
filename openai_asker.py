@@ -1,6 +1,7 @@
 from langchain.chains import RetrievalQA
 from langchain.llms import OpenAI
 from langchain.callbacks import StdOutCallbackHandler
+from langchain.output_parsers import StructuredOutputParser, ResponseSchema
 from langchain.prompts import PromptTemplate
 from langchain.memory import ConversationBufferMemory
 
@@ -23,14 +24,26 @@ had been changed before and appear in Context, perform any changes considering t
 Context: 
 {context}
 
+{format_instructions}
+
 Human: {question}
 
-Assistant:
+Helpful Assistant:
         """
+
+        response_schemas = [
+            ResponseSchema(name="new code", description="This is an updated version of the code"),
+            ResponseSchema(name="path", description="This is the value \"path\" in question metadata")
+        ]
+
+        parser = StructuredOutputParser.from_response_schemas(response_schemas)
 
         prompt = PromptTemplate(
             input_variables=["context", "question"],
-            template=template
+            template=template,
+            partial_variables={
+                "format_instructions": parser.get_format_instructions()
+            }
         )
 
         chain = RetrievalQA.from_chain_type(
@@ -48,7 +61,7 @@ Assistant:
         print(context)
 
         # noinspection PyUnresolvedReferences
-        print(prompt.format_prompt(context=context, question=query).text)
+        #print(prompt.format_prompt(context=context, question=query).text)
 
         output = chain({"query": query})
 

@@ -1,19 +1,18 @@
 class CodeSplitter:
-    def __init__(self, content, split_required=True):
-        self.content = content
-        if split_required:
-            self.content = self.content.splitlines()
+    def __init__(self, path):
+        self.loader = GenericLoader.from_filesystem(
+            path=path,
+            glob='*',
+            suffixes=[".py"],
+            parser=LanguageParser(language=Language.PYTHON)
+        )
+        self.docs = self.loader.load()
 
-    def split(self):
-        chunks = []
-        new_chunk = ""
-        for line in self.content:
-            if line.strip() != "":
-                if line[0] == " " or new_chunk == "":
-                    new_chunk += line + "\n"
-                else:
-                    chunks.append(new_chunk)
-                    new_chunk = line + "\n"
-        if new_chunk != "":
-            chunks.append(new_chunk)
-        return chunks
+    def to_indexed_objects(self):
+        print(self.docs[0].page_content)
+        return [IndexedObject.create_object(doc.page_content, path=doc.metadata['source']) for doc in self.docs]
+
+    @staticmethod
+    def print_indexed_objects(indexed_objects):
+        for obj in indexed_objects:
+            print(obj)

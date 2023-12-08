@@ -4,17 +4,20 @@ import pinecone
 from pinecone.core.client.exceptions import NotFoundException, ApiException
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Pinecone
-
-import config
-from file_manager import FileManager
+from langchain.schema import Document
 
 
 class PineconeManager:
     __instance = None
 
-    def __init__(self, index_name):
+    def __init__(self, index_name, insta_delete=False):
         self.index_name = index_name
         pinecone.init(environment='gcp-starter')
+        if insta_delete:
+            try:
+                pinecone.delete_index(self.index_name)
+            except Exception:  # noqa
+                pass
         try:
             _ = pinecone.describe_index(index_name)
             
@@ -37,8 +40,12 @@ class PineconeManager:
         embeddings_model = OpenAIEmbeddings()
         index = pinecone.Index(self.index_name)
         index.delete(delete_all=True)
+
+        content_formatted = self.content_for_pinecone(content)
+        print("++++++++++++++++++++")
+        print(content_formatted[0].metadata)
         Pinecone.from_documents(
-            FileManager.content_for_pinecone(content),
+            content_formatted,
             embeddings_model,
             index_name=self.index_name
         )
@@ -46,3 +53,7 @@ class PineconeManager:
     def get_index(self):
         embeddings_model = OpenAIEmbeddings()
         return Pinecone.from_existing_index(self.index_name, embeddings_model)
+
+    @classmethod
+    def content_for_pinecone(cls, indexed_object_list):
+        return tuple(map(lambda x: Document(page_content=x.data, metadata=x.metadata), indexed_object_list))
