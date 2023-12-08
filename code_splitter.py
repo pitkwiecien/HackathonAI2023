@@ -1,3 +1,10 @@
+from objects.indexed_object import IndexedObject
+
+from langchain.document_loaders.generic import GenericLoader
+from langchain.document_loaders.parsers import LanguageParser
+from langchain.text_splitter import Language
+
+
 class CodeSplitter:
     def __init__(self, path):
         self.loader = GenericLoader.from_filesystem(
