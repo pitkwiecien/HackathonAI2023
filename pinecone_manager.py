@@ -42,8 +42,8 @@ class PineconeManager:
         index.delete(delete_all=True)
 
         content_formatted = self.content_for_pinecone(content)
-        print("++++++++++++++++++++")
-        print(content_formatted[0].metadata)
+        # print("++++++++++++++++++++")
+        # print(content_formatted[0].metadata)
         Pinecone.from_documents(
             content_formatted,
             embeddings_model,

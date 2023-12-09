@@ -10,7 +10,7 @@ splitter = CodeSplitter(config.PROJECT_REPO_LOCATION)
 
 # Rozdziel pliki na pomniejsze kawałki tekstu
 split_contents = splitter.to_indexed_objects()
-CodeSplitter.print_indexed_objects(split_contents)
+# CodeSplitter.print_indexed_objects(split_contents)
 
 pinecone_mgr = PineconeManager(config.PINECONE_INDEX_NAME, True)
 pinecone_mgr.index_content(split_contents)
@@ -20,12 +20,14 @@ index = pinecone_mgr.get_index()
 mongo_mgr = MongoManager("test-session")
 
 ai_asker = OpenaiAsker(index=index)
-#result = ai_asker.ask("Give me the contents of the file with path 'P:\\Files\\Python\\llm\\_AuxiliaryProjects\\GitEasyClasses\\monitor.py'")
-#print(result)
+# result = ai_asker.ask("Give me the contents of the file with path 'P:\\Files\\Python\\llm\\_AuxiliaryProjects\\GitEasyClasses\\monitor.py'")
+# print(result)
 
 result = ai_asker.ask_index("Add a parameter ram to the class Computer and return the whole class with the changes")
+print(OpenaiAsker.get_result_from_answer(result))
 
 docsearch = pinecone_mgr.get_index()
 docs = docsearch.similarity_search_with_score("Add a parameter ram to the class Computer and return the whole class with the changes")
-print(docs)
+# print(docs)
 result = ai_asker.ask_index("What did I ask about a moment ago?")
+print(OpenaiAsker.get_result_from_answer(result))

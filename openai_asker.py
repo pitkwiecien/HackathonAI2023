@@ -61,7 +61,7 @@ Helpful Assistant:
         # noinspection PyUnresolvedReferences
         msg = chain.memory.chat_memory.messages
         context = self.format_to_context(msg)
-        print(context)
+        # print(context)
 
         # noinspection PyUnresolvedReferences
         # print(prompt.format_prompt(context=context, question=query).text)
@@ -87,3 +87,7 @@ Helpful Assistant:
             eq += f"Human: {history[i*2].content}\n"
             eq += f"Assistant: {history[i*2 + 1].content}\n"
         return eq
+
+    @staticmethod
+    def get_result_from_answer(answer):
+        return answer["result"]
