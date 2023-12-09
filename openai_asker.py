@@ -7,7 +7,7 @@ from langchain.memory import ConversationBufferMemory
 
 
 class OpenaiAsker:
-    def __init__(self, index, chain_type="stuff"):
+    def __init__(self, index=None, chain_type="stuff"):
         self.index = index
         self.chain_type = chain_type
         self.memory = ConversationBufferMemory(
@@ -15,7 +15,10 @@ class OpenaiAsker:
             return_messages=True
         )
 
-    def ask(self, query):
+    def ask_index(self, query):
+        if self.index is None:
+            print("Index is not filled")
+            return
         template = """
 You will be given tasks to perform on given python code. Answer them by performing given actions and returning the updated version
 of the code including the whole changed object. Return the objects that you think should be changed in the updated version. If one or more of these objects 
@@ -61,7 +64,7 @@ Helpful Assistant:
         print(context)
 
         # noinspection PyUnresolvedReferences
-        #print(prompt.format_prompt(context=context, question=query).text)
+        # print(prompt.format_prompt(context=context, question=query).text)
 
         output = chain({"query": query})
 

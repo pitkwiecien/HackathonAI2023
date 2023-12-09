@@ -19,13 +19,13 @@ index = pinecone_mgr.get_index()
 
 mongo_mgr = MongoManager("test-session")
 
-ai_asker = OpenaiAsker(index)
+ai_asker = OpenaiAsker(index=index)
 #result = ai_asker.ask("Give me the contents of the file with path 'P:\\Files\\Python\\llm\\_AuxiliaryProjects\\GitEasyClasses\\monitor.py'")
 #print(result)
 
-result = ai_asker.ask("Add a parameter ram to the class Computer and return the whole class with the changes")
+result = ai_asker.ask_index("Add a parameter ram to the class Computer and return the whole class with the changes")
 
 docsearch = pinecone_mgr.get_index()
 docs = docsearch.similarity_search_with_score("Add a parameter ram to the class Computer and return the whole class with the changes")
 print(docs)
-result = ai_asker.ask("What did I ask about a moment ago?")
+result = ai_asker.ask_index("What did I ask about a moment ago?")
