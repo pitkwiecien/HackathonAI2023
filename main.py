@@ -6,6 +6,7 @@ from openai_asker import OpenaiAsker
 from mongo_manager import MongoManager
 from code_splitter import CodeSplitter
 from objects.indexed_object import IndexedObject
+from file_descriptor import FileDescriptor
 
 from os.path import join, dirname
 # noinspection PyPackageRequirements
@@ -20,6 +21,11 @@ splitter = CodeSplitter(config.PROJECT_REPO_LOCATION)
 # Rozdziel pliki na pomniejsze kawałki tekstu
 split_contents = splitter.to_indexed_objects()
 CodeSplitter.print_indexed_objects(split_contents)
+descriptor = FileDescriptor(split_contents)
+desc = descriptor.describe()
+for elem in desc:
+    print(elem)
+
 
 code_api = os.environ.get("PINECONE_CODE_API_KEY")
 print(code_api)

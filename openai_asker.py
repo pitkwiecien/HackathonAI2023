@@ -98,7 +98,7 @@ Helpful Assistant:
     def describe_file(param: IndexedObject):
         template = ChatPromptTemplate.from_messages([
             SystemMessage(content=("You are a django assistant that explains the meaning of files in a"
-                                  "django project")),
+                                  "django project. Your answers have to be short (max 3 sentences)")),
             HumanMessagePromptTemplate.from_template("{path}")
         ])
 

@@ -9,9 +9,4 @@ class FileDescriptor:
         self.docs = docs
 
     def describe(self):
-        return tuple(map(lambda x: self.describe_file(x), self.docs))
-
-    @staticmethod
-    def describe_file(obj: IndexedObject):
-        asker = OpenaiAsker.describe_file("")
-        return IndexedObject(ai_result, code=obj.data, **obj.metadata)
+        return tuple(map(lambda x: OpenaiAsker.describe_file(x), self.docs))
