@@ -11,15 +11,20 @@ class CodeDescriptor:
         self.files = files
 
     def describe(self):
+        # print("==========")
+        # print(self.docs)
         for doc in self.docs:
             matching_field = None
-            print(doc.metadata["path"])
+            # print(f"path to find: {doc.metadata['path']}")
             for f in self.files:
-                print(f.path)
+                # print(f.path)
                 if f.path == doc.metadata["path"]:
                     matching_field = f
+                    break
             doc.metadata["meaning"] = matching_field.file_desc
             result = OpenaiAsker.describe_code(doc)
             if matching_field:
-                matching_field.a.append(result)
+                # print(f"adding {result} to {matching_field}")
+                matching_field.add_object_desc(result)
+        return self.files
 

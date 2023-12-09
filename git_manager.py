@@ -1,7 +1,22 @@
 import git
+import os
 
 
 class GitManager:
+    @staticmethod
+    def get_all_files_in_directory(directory):
+        all_files = []
+        for root, dirs, files in os.walk(directory):
+            if 'venv' in dirs:
+                dirs.remove('venv')
+
+            dirs[:] = [d for d in dirs if not d.startswith('.') and not d.startswith('__')]
+            for file in files:
+                file_path = os.path.join(root, file)
+                # file_path = os.path.relpath(file_path, directory)
+                all_files.append(file_path)
+        return all_files
+
     @classmethod
     def get_local_files(cls, directory=None, tree=None, ignored_file_beginnings=None):
         if directory == tree is None:
