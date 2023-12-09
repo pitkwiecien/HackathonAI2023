@@ -7,10 +7,12 @@ from mongo_manager import MongoManager
 from code_splitter import CodeSplitter
 from objects.indexed_object import IndexedObject
 from file_descriptor import FileDescriptor
+from code_descriptor import CodeDescriptor
 
 from os.path import join, dirname
 # noinspection PyPackageRequirements
 from dotenv import load_dotenv
+
 
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
@@ -21,15 +23,26 @@ splitter = CodeSplitter(config.PROJECT_REPO_LOCATION)
 # Rozdziel pliki na pomniejsze kawałki tekstu
 split_contents = splitter.to_indexed_objects()
 CodeSplitter.print_indexed_objects(split_contents)
-descriptor = FileDescriptor(split_contents)
-desc = descriptor.describe()
-for elem in desc:
+paths = [IndexedObject.create_object("abc", path="agent_manager.py"),
+         IndexedObject.create_object("abc", path="code_descriptor.py")
+         ]
+file_descriptor = FileDescriptor(paths)
+desc_file = file_descriptor.describe()
+for elem in desc_file:
     print(elem)
+print(desc_file)
+
+print(split_contents)
+code_descriptor = CodeDescriptor(split_contents, desc_file)
+desc_code = code_descriptor.describe()
+print(desc_code)
+for dc in desc_code:
+    print(dc)
 
 
 code_api = os.environ.get("PINECONE_CODE_API_KEY")
-print(code_api)
-print(config.PINECONE_CODE_INDEX_NAME)
+# print(code_api)
+# print(config.PINECONE_CODE_INDEX_NAME)
 pinecone_mgr = PineconeManager(config.PINECONE_CODE_INDEX_NAME, os.environ.get("PINECONE_CODE_API_KEY"), True)
 pinecone_mgr.index_content(split_contents)
 

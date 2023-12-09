@@ -2,6 +2,7 @@ from typing import List
 
 from objects.indexed_object import IndexedObject
 from openai_asker import OpenaiAsker
+from descripted_file import DescriptedFile
 
 
 class FileDescriptor:
@@ -9,4 +10,4 @@ class FileDescriptor:
         self.docs = docs
 
     def describe(self):
-        return tuple(map(lambda x: OpenaiAsker.describe_file(x), self.docs))
+        return tuple(map(lambda x: DescriptedFile(x.metadata["path"], OpenaiAsker.describe_file(x)), self.docs))

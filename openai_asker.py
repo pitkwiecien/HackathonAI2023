@@ -8,6 +8,7 @@ from langchain.chat_models import ChatOpenAI
 from langchain.schema.messages import SystemMessage
 
 from objects.indexed_object import IndexedObject
+from descripted_file import DescriptedFile
 
 
 class OpenaiAsker:
@@ -101,25 +102,23 @@ Helpful Assistant:
                                   "django project. Your answers have to be short (max 3 sentences)")),
             HumanMessagePromptTemplate.from_template("{path}")
         ])
-
-        #     """
-        # You will be given the path to a file in Django. You have to return the meaning of this file
-        # in the context of Django. It is crucial that you interpret it in the context of a django project.
-        #
-        # Human: Return me in the context of a Django project, in max 3 short sentences,
-        # the meaning of a file with path: {path}
-        #
-        # Helpful Assistant:
-        #         """
-
         llm = ChatOpenAI(temperature=0)
-
-        # prompt = PromptTemplate(
-        #     input_variables=["path"],
-        #     template=template,
-        # )
-        #
-        # final_prompt = str(prompt.format(path=param.metadata["path"]))
-        # print(final_prompt)
         return llm(template.format_messages(path=param.metadata["path"])).content
+
+    @staticmethod
+    def describe_code(param: IndexedObject):
+        template = ChatPromptTemplate.from_messages([
+            SystemMessage(content=("You are a helpful assistant that explains the meaning of classes in a"
+                                   "django project. Your answers have to be short."
+                                   "Consider the meaning of the file in the context of django, but "
+                                   "focus mainly on the description of it. You have to shortly "
+                                   "explain the object's parameters if there are any, its functions if "
+                                   "it is a class."
+                                   "Meaning of the file it is in: {meaning}")),
+            HumanMessagePromptTemplate.from_template("{code}")
+        ])
+        llm = ChatOpenAI(temperature=0)
+        description = llm(template.format_messages(code=param.data, meaning=param.metadata["meaning"])).content
+        return description
+
 

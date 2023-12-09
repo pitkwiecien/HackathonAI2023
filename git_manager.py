@@ -31,6 +31,8 @@ class GitManager:
             file_contents[f.path] = content
         return file_contents
 
+
+
     @staticmethod
     def get_commit_tree(directory):
         repo = git.Repo(directory)
