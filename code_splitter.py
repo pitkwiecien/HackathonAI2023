@@ -11,7 +11,7 @@ class CodeSplitter:
             path=path,
             glob='*',
             suffixes=[".py"],
-            parser=LanguageParser(language=Language.PYTHON)
+            parser=LanguageParser()
         )
         self.docs = self.loader.load()
 

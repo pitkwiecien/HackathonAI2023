@@ -1,3 +1,5 @@
+import os
+
 # noinspection PyPackageRequirements
 import pinecone
 # noinspection PyPackageRequirements
@@ -10,12 +12,12 @@ from langchain.schema import Document
 class PineconeManager:
     __instance = None
 
-    def __init__(self, index_name, insta_delete=False):
+    def __init__(self, index_name, api_key, insta_delete=False):
         self.index_name = index_name
-        pinecone.init(environment='gcp-starter')
+        pinecone.init(environment='gcp-starter', api_key=api_key)
         if insta_delete:
             try:
-                pinecone.delete_index(self.index_name)
+                pinecone.delete_index(index_name)
             except Exception:  # noqa
                 pass
         try:

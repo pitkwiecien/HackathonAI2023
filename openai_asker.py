@@ -2,13 +2,18 @@ from langchain.chains import RetrievalQA
 from langchain.llms import OpenAI
 from langchain.callbacks import StdOutCallbackHandler
 from langchain.output_parsers import StructuredOutputParser, ResponseSchema
-from langchain.prompts import PromptTemplate
+from langchain.prompts import PromptTemplate, HumanMessagePromptTemplate, ChatPromptTemplate
 from langchain.memory import ConversationBufferMemory
+from langchain.chat_models import ChatOpenAI
+from langchain.schema.messages import SystemMessage
+
+from objects.indexed_object import IndexedObject
 
 
 class OpenaiAsker:
-    def __init__(self, index=None, chain_type="stuff"):
+    def __init__(self, index, chain_type="stuff"):
         self.index = index
+        print(self.index)
         self.chain_type = chain_type
         self.memory = ConversationBufferMemory(
             memory_key="chat_history",
@@ -16,9 +21,6 @@ class OpenaiAsker:
         )
 
     def ask_index(self, query):
-        if self.index is None:
-            print("Index is not filled")
-            return
         template = """
 You will be given tasks to perform on given python code. Answer them by performing given actions and returning the updated version
 of the code including the whole changed object. Return the objects that you think should be changed in the updated version. If one or more of these objects 
@@ -64,7 +66,7 @@ Helpful Assistant:
         # print(context)
 
         # noinspection PyUnresolvedReferences
-        # print(prompt.format_prompt(context=context, question=query).text)
+        print(prompt.format_prompt(context=context, question=query).text)
 
         output = chain({"query": query})
 
@@ -91,3 +93,33 @@ Helpful Assistant:
     @staticmethod
     def get_result_from_answer(answer):
         return answer["result"]
+
+    @staticmethod
+    def describe_file(param: IndexedObject):
+        template = ChatPromptTemplate.from_messages([
+            SystemMessage(content=("You are a django assistant that explains the meaning of files in a"
+                                  "django project")),
+            HumanMessagePromptTemplate.from_template("{path}")
+        ])
+
+        #     """
+        # You will be given the path to a file in Django. You have to return the meaning of this file
+        # in the context of Django. It is crucial that you interpret it in the context of a django project.
+        #
+        # Human: Return me in the context of a Django project, in max 3 short sentences,
+        # the meaning of a file with path: {path}
+        #
+        # Helpful Assistant:
+        #         """
+
+        llm = ChatOpenAI(temperature=0)
+
+        # prompt = PromptTemplate(
+        #     input_variables=["path"],
+        #     template=template,
+        # )
+        #
+        # final_prompt = str(prompt.format(path=param.metadata["path"]))
+        # print(final_prompt)
+        return llm(template.format_messages(path=param.metadata["path"])).content
+
