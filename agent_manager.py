@@ -2,8 +2,9 @@ from globals import Globals
 from langchain.agents import initialize_agent
 from langchain.memory import ConversationBufferMemory
 from langchain.llms import OpenAI
-from LangchainTest.documentation_tool import DocumentTool
-from LangchainTest.not_implemented_tool import NotImplementedTool
+from documentation_tool import DocumentTool
+from not_implemented_tool import NotImplementedTool
+from mongo_manager import MongoManager
 
 
 class AgentManager:
@@ -31,6 +32,7 @@ class AgentManager:
             memory_key="chat_history",
             return_messages=True
         )
+        self.mongo_manager = MongoManager('agent-session', mongo_api_key)
         self.agent = initialize_agent(tools=tools, llm=llm, verbose=False, max_iterations=1)
 
     def run_agent(self, prompt):
@@ -45,4 +47,5 @@ class AgentManager:
         """
         self.agent({"input": prompt})
         self.memory.save_context({"input": prompt}, {"output": Globals.used_tool_message})
+        self.mongo_manager.add_message_to_mongo(prompt, Globals.used_tool_message)
         return Globals.used_tool_message

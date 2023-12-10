@@ -2,3 +2,4 @@ langchain
 pinecone-client
 gitpython
 pymongo
+python-dotenv

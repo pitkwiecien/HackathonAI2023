@@ -27,7 +27,7 @@ class MongoManager:
             session_id=self.session_id
         )
 
-    def add_message_to_Mongo(self, user_message, ai_message):
+    def add_message_to_mongo(self, user_message, ai_message):
         """
         Adds user and AI messages to the MongoDB chat message history.
 
