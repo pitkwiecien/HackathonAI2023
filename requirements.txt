@@ -3,3 +3,4 @@ pinecone-client
 gitpython
 pymongo
 python-dotenv
+openai
