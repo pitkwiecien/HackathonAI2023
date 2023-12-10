@@ -32,7 +32,7 @@ class AgentManager:
             memory_key="chat_history",
             return_messages=True
         )
-        self.mongo_manager = MongoManager('agent-session', mongo_api_key)
+        # self.mongo_manager = MongoManager('agent-session', mongo_api_key)
         self.agent = initialize_agent(tools=tools, llm=llm, verbose=False, max_iterations=1)
 
     def run_agent(self, prompt):
@@ -47,5 +47,5 @@ class AgentManager:
         """
         self.agent({"input": prompt})
         self.memory.save_context({"input": prompt}, {"output": Globals.used_tool_message})
-        self.mongo_manager.add_message_to_mongo(prompt, Globals.used_tool_message)
+        # self.mongo_manager.add_message_to_mongo(prompt, Globals.used_tool_message)
         return Globals.used_tool_message
