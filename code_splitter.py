@@ -9,7 +9,7 @@ class CodeSplitter:
     def __init__(self, path):
         self.loader = GenericLoader.from_filesystem(
             path=path,
-            glob='*',
+            glob='**/*',
             suffixes=[".py"],
             parser=LanguageParser()
         )
