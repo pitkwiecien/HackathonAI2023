@@ -24,18 +24,13 @@ class DescriptedFile:
 
     # Tworzy dokumentacje dla danego pliku
     def create_document(self):
-        print("=========")
-        print(self.path)
-        print("==========")
         document_location = self.path
         # document_location = self.insert_str(document_location, "/.ai_docs", self.path.rfind('/'))
         document_location = document_location.replace(config.PROJECT_REPO_LOCATION, config.PROJECT_REPO_LOCATION + config.DOCS_FOLDER_NAME)
         mkdir_location = document_location[:document_location.rfind('/')]
-        print(f"mkdir: {mkdir_location}")
         if not os.path.exists(mkdir_location):
             os.makedirs(mkdir_location)
         document_location = document_location.replace('.py', '.txt')
-        print(f"document: {document_location}")
         f = open(document_location, "w+")
         f.write(self.file_desc)
         f.write("\n\n")
@@ -51,7 +46,6 @@ class DescriptedFile:
         except FileNotFoundError:
             pass
         for dc in documents:
-            print(dc)
             dc.create_document()
 
     @staticmethod

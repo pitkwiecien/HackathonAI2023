@@ -14,7 +14,6 @@ from descripted_file import DescriptedFile
 class OpenaiAsker:
     def __init__(self, index, chain_type="stuff"):
         self.index = index
-        print(self.index)
         self.chain_type = chain_type
         self.memory = ConversationBufferMemory(
             memory_key="chat_history",
@@ -67,7 +66,7 @@ Helpful Assistant:
         # print(context)
 
         # noinspection PyUnresolvedReferences
-        print(prompt.format_prompt(context=context, question=query).text)
+        # print(prompt.format_prompt(context=context, question=query).text)
 
         output = chain({"query": query})
 

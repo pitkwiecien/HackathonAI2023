@@ -10,6 +10,7 @@ from file_descriptor import FileDescriptor
 from code_descriptor import CodeDescriptor
 from git_manager import GitManager
 from descripted_file import DescriptedFile
+from agent_manager import AgentManager
 
 from os.path import join, dirname
 # noinspection PyPackageRequirements
@@ -19,41 +20,15 @@ from dotenv import load_dotenv
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
+mongo_url = os.environ.get("MONGO_URL")
+a = AgentManager(mongo_url)
+
+print(a.run_agent("make documentation for this project"))
+
 # Stwórz klase
-splitter = CodeSplitter(config.PROJECT_REPO_LOCATION)
+
 
 # Rozdziel pliki na pomniejsze kawałki tekstu
-split_contents = splitter.to_indexed_objects()
-CodeSplitter.print_indexed_objects(split_contents)
-# paths = [IndexedObject.create_object("abc", path="agent_manager.py"),
-#          IndexedObject.create_object("abc", path="code_descriptor.py")
-#          ]
-
-paths = GitManager.get_all_files_in_directory(config.PROJECT_REPO_LOCATION)
-print("00000")
-print(paths)
-new_paths = []
-for path in paths:
-    print(path)
-    new_paths.append(IndexedObject.create_object("", path=path))
-
-file_descriptor = FileDescriptor(new_paths)
-desc_file = file_descriptor.describe()
-for elem in desc_file:
-    print(elem)
-print(desc_file)
-
-print(split_contents)
-code_descriptor = CodeDescriptor(split_contents, desc_file)
-desc_code = code_descriptor.describe()
-print(desc_code)
-parent_dir = config.PROJECT_REPO_LOCATION
-
-dir="ai_docs"
-
-path_new_dir = os.path.join(parent_dir, dir)
-
-DescriptedFile.initialize_documents(DescriptedFile.get_ai_doc_location(), desc_code)
 
 
 # code_api = os.environ.get("PINECONE_CODE_API_KEY")
