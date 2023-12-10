@@ -22,7 +22,7 @@ class DocumentTool(BaseTool):
         splitter = CodeSplitter(config.PROJECT_REPO_LOCATION)
 
         split_contents = splitter.to_indexed_objects()
-        CodeSplitter.print_indexed_objects(split_contents)
+        # CodeSplitter.print_indexed_objects(split_contents)
         paths = [IndexedObject.create_object("abc", path="agent_manager.py"),
                  IndexedObject.create_object("abc", path="code_descriptor.py")
                  ]

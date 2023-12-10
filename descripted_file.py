@@ -30,7 +30,8 @@ class DescriptedFile:
         mkdir_location = document_location[:document_location.rfind('/')]
         if not os.path.exists(mkdir_location):
             os.makedirs(mkdir_location)
-        document_location = document_location.replace('.py', '.txt')
+        document_location = document_location[:document_location.rfind('.')]
+        document_location += ".md"
         f = open(document_location, "w+")
         f.write(self.file_desc)
         f.write("\n\n")

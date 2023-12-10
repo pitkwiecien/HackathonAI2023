@@ -10,7 +10,7 @@ class CodeSplitter:
         self.loader = GenericLoader.from_filesystem(
             path=path,
             glob='**/*',
-            suffixes=[".py"],
+            suffixes=[".py", ".js", ".html"],
             parser=LanguageParser()
         )
         self.docs = self.loader.load()
